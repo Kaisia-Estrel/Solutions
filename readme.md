@@ -13,7 +13,7 @@
 ```
 
 ## Problem-3
-
+(using dfns)
 ```apl
 ⊢/factors 600851475143
 ```
