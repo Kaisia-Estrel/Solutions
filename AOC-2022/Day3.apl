@@ -1,4 +1,11 @@
-⍝ First problem
+⍝----------------Old Solution---
+⍝ Part 1
 +/{⍵≥97:⍵-96⋄⍵-38 }¨ ⎕UCS ⊃¨∩/↑{⍵⊆⍨{1+(2÷⍨≢⍵)<⍳≢⍵}⍵}¨¯1∘↓⊃⎕NGET 'input.txt' 1
-⍝ Second Problem
+⍝ Part 2
 +/{⍵≥97:⍵-96⋄⍵-38 }¨ ⎕UCS⊃∘⊃¨∩/¨{⍵⊂[1]⍨(≢⍵)⍴3↑1}¯1∘↓⊃⎕NGET 'input.txt' 1
+
+⍝----------------New Solution---
+⍝Part 1
++/((⎕C,⊢)⎕A)⍳(⊃∩)/∘↓¨(⊢⍴⍨2,(2÷⍨≢))¨⊃⎕NGET 'input.txt' 1
+⍝Part 2
++/((⎕C,⊢)⎕A)⍳⊃¨∩/(⊢⍴⍨3,⍨3÷⍨≢)⊃⎕NGET 'input.txt' 1
