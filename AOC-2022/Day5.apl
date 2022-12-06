@@ -12,3 +12,14 @@ move2 ← {
 
 ⊃¨ins{0=≢⍺:⍵ ⋄ (1↓⍺)∇(⍵ move1⍨ ⊃⍺)}grid
 ⊃¨ins{0=≢⍺:⍵ ⋄ (1↓⍺)∇(⍵ move2⍨ ⊃⍺)}grid
+
+⍝Refactored
+(grid ins)←(×⍤≢¨⊆⊢)⊃⎕NGET 'input.txt' 1
+grid←(~∘' ')¨↓⍉⊃¨↑({~×4|2+⍳≢⍵}⊆⊢)¨¯1↓grid
+ins←⌽(⍎¨{⍵∊⎕D}⊆⊢)¨ins
+move ← { 
+  (q f t)←⍺ ⋄ (l r)←q(↑{⍺⍵}↓)⊃⍵[f] 
+  ((⍺⍺l)∘,¨@t) (r⍨¨@f)⍵
+}
+,/⊃¨⊃ ⌽move/ins,⊂grid
+,/⊃¨⊃ ⊣move/ins,⊂grid
