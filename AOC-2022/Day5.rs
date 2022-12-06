@@ -35,12 +35,7 @@ fn main() {
 
     let mut grid = grid_
         .iter()
-        .map(|x| {
-            x.iter()
-                .filter_map(|x| if !x.is_whitespace() { Some(*x) } else { None })
-                .rev()
-                .collect_vec()
-        })
+        .map(|x| x.iter().filter_map(|x| if !x.is_whitespace() { Some(*x)} else {None}).rev().collect_vec())
         .collect_vec();
     let mut grid_clone = grid.clone();
 
@@ -53,28 +48,15 @@ fn main() {
         })
         .filter_map(|x| x);
     for (quant, from, to) in instructions.clone() {
-        for i in mult_pop(&mut grid[from - 1], quant).unwrap().iter() {
-            grid[to - 1].push(*i);
+        for i in mult_pop(&mut grid[from-1], quant).unwrap().iter() {
+            grid[to-1].push(*i);
         }
     }
-    println!(
-        "part1: {:?}",
-        grid.iter().map(|x| x.last().unwrap()).collect::<String>()
-    );
+    println!("part1: {:?}", grid.iter().map(|x|x.last().unwrap()).collect::<String>());
     for (quant, from, to) in instructions.clone() {
-        for i in mult_pop(&mut grid_clone[from - 1], quant)
-            .unwrap()
-            .iter()
-            .rev()
-        {
-            grid_clone[to - 1].push(*i);
+        for i in mult_pop(&mut grid_clone[from-1], quant).unwrap().iter().rev() {
+            grid_clone[to-1].push(*i);
         }
     }
-    println!(
-        "part2: {:?}",
-        grid_clone
-            .iter()
-            .map(|x| x.last().unwrap())
-            .collect::<String>()
-    );
+    println!("part2: {:?}", grid_clone.iter().map(|x|x.last().unwrap()).collect::<String>());
 }
