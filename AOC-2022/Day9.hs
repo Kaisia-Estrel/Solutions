@@ -1,4 +1,3 @@
-module Main
   ( main
   ) where
 
@@ -20,4 +19,4 @@ main = do
         .  concatMap (\x -> replicate (read $ drop 2 x) (head x) )
         .  lines <$> readFile "input.txt"
   print $ length $ nub $ scanl follow (0,0) input
-  print $ length $ nub $ iterate (scanl follow (0,0)) input
+  print $ length $ nub $ iterate (scanl follow (0,0)) input !! 9
