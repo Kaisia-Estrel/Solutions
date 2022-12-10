@@ -1,31 +1,23 @@
-{-# LANGUAGE ViewPatterns #-}
-module Main (main) where
+module Main
+  ( main
+  ) where
+
 import Data.List
+import Data.Complex
+import Data.Maybe
 
-data Direction = DR | R | UR | D | M | U | DL | L | UL deriving (Read, Show, Enum, Eq)
+onTup f (a,b) (c,d) = (f a c, f b d)
+both f (a,b) = (f a, f b)
 
-move :: Direction -> (Int,Int) -> (Int,Int)
-move d (a,b) = [(a-x,b-y) | x <- [-1,0,1], y <- [1,0,-1]] !! fromEnum d
-
-rotate :: Direction -> Direction
-rotate d = [UL,L .. DR] !! fromEnum d
-
-isNeighbor :: (Int,Int) -> (Int,Int) -> Bool
-isNeighbor (a,b) t = t `elem` ([(a-x,b-y) | x <- [-1,0,1], y <- [1,0,-1]])
-
-sim :: Direction -> (Int,Int) -> (Int,Int) -> (Int,Int)
-sim d (move d -> x) t = if isNeighbor x t then t else move (rotate d) x
-
-solve :: (Int,Int) -> (Int,Int) ->  [Direction] -> [(Int,Int)]
-solve t _  [] = [t]
-solve t h (d:xs) = let x = sim d h t in x : solve x (move d h) xs
+neighbor t h = case  onTup (-) t h of (a,b) -> abs a <= 1 && abs b <= 1
+follow t h = if neighbor t h then t else onTup (+) t $ both signum (onTup (-) h t)
 
 main :: IO ()
 main = do
-  print
-  . length
-  . nub
-  . solve (0,0) (0,0)
-  . concatMap ( (\[a,b] -> replicate (read b) (read a))
-              . words)
-  . lines =<< readFile "input.txt"
+  input <- map (\(x:+y)-> (round x,round y) )
+        .  scanl1 (+)
+        .  map (((0 :+ 1) ^) . fromJust . flip elemIndex "RULD")
+        .  concatMap (\x -> replicate (read $ drop 2 x) (head x) )
+        .  lines <$> readFile "input.txt"
+  print $ length $ nub $ scanl follow (0,0) input
+  print $ length $ nub $ iterate (scanl follow (0,0)) input
