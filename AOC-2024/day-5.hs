@@ -1,5 +1,4 @@
 {-# LANGUAGE DataKinds #-}
-{-# LANGUAGE LambdaCase #-}
 {-# OPTIONS_GHC -Wno-name-shadowing #-}
 
 module Main where
@@ -8,6 +7,10 @@ import Data.List ((!!))
 import Data.Map qualified as M
 import Data.Text qualified as T
 import Utils
+
+orderedBy :: (a -> a -> Ordering) -> [a] -> Bool
+orderedBy f (x : y : xs) = f x y == LT && orderedBy f (y : xs)
+orderedBy _ _ = True
 
 main :: IO ()
 main = do
@@ -25,15 +28,6 @@ main = do
 
   let updates = map (map (readText' @Int) . T.split (== ',')) updatesRaw
 
-  let ordered xs =
-        not
-          $ any
-            ( \case
-                (x : xs) -> maybe False (any (`elem` xs)) $ ordering M.!? x
-                _ -> False
-            )
-          . tails
-          $ reverse xs
   let midpoint xs = xs !! (length xs `div` 2)
 
   let order l r = case ordering M.!? l of
@@ -41,6 +35,7 @@ main = do
         _ -> case ordering M.!? r of
           Just xs | l `elem` xs -> GT
           _ -> EQ
+  let ordered = orderedBy order
 
   putTextLn "Part 1:"
   print $ sum $ map midpoint $ filter ordered updates
